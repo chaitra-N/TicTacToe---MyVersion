@@ -1,11 +1,29 @@
 import React from "react";
 import Square from "./Square";
-import Board from "./Board";
-import { useState } from "react";
+import { Patterns } from "./Patterns";
+import { useState, useEffect } from "react";
 
 const Game = () => {
   const [board, setBoard] = useState(["", "", "", "", "", "", "", "", ""]);
-  const [player, setPlayer] = useState("X");
+  const [player, setPlayer] = useState("O");
+  const [result, setResult] = useState({ winner: "none", state: "none" });
+
+  useEffect(() => {
+    checkWinner();
+    checkIfTie();
+    if (player === "X") {
+      setPlayer("O");
+    } else {
+      setPlayer("X");
+    }
+  }, [board]);
+
+  useEffect(() => {
+    if (result.state !== "none") {
+      alert(`Game finished! Winner: ${result.winner}`);
+      restartGame();
+    }
+  }, [result]);
 
   const clickSquare = (square) => {
     setBoard(
@@ -16,6 +34,44 @@ const Game = () => {
         return val;
       })
     );
+  };
+
+  const checkWinner = () => {
+    Patterns.forEach((currentPattern) => {
+      const firstPlayer = board[currentPattern[0]];
+      if (firstPlayer === "") {
+        return;
+      }
+      let foundWinnerPattern = true;
+      currentPattern.forEach((index) => {
+        if (board[index] !== firstPlayer) {
+          foundWinnerPattern = false;
+        }
+      });
+      if (foundWinnerPattern) {
+        setResult({
+          winner: player,
+          state: "Won",
+        });
+      }
+    });
+  };
+
+  const checkIfTie = () => {
+    let filled = true;
+    board.forEach((square) => {
+      if (square === "") {
+        filled = false;
+      }
+    });
+    if (filled) {
+      setResult({ winner: "No One", state: "Tie" });
+    }
+  };
+
+  const restartGame = () => {
+    setBoard(["", "", "", "", "", "", "", "", ""]);
+    setPlayer("O");
   };
   return (
     <div className='game'>
@@ -40,8 +96,46 @@ const Game = () => {
             }}
           />
         </div>
-        <div className='row'></div>
-        <div className='row'></div>
+        <div className='row'>
+          <Square
+            val={board[3]}
+            clickSquare={() => {
+              clickSquare(3);
+            }}
+          />
+          <Square
+            val={board[4]}
+            clickSquare={() => {
+              clickSquare(4);
+            }}
+          />
+          <Square
+            val={board[5]}
+            clickSquare={() => {
+              clickSquare(5);
+            }}
+          />
+        </div>
+        <div className='row'>
+          <Square
+            val={board[6]}
+            clickSquare={() => {
+              clickSquare(6);
+            }}
+          />
+          <Square
+            val={board[7]}
+            clickSquare={() => {
+              clickSquare(7);
+            }}
+          />
+          <Square
+            val={board[8]}
+            clickSquare={() => {
+              clickSquare(8);
+            }}
+          />
+        </div>
       </div>
     </div>
   );
