@@ -1,9 +1,10 @@
 import React from "react";
+import "./index.css";
 
-const Square = () => {
+const Square = ({ val, clickSquare }) => {
   return (
-    <div>
-      <h1>Sqaure Component</h1>
+    <div className='square' onClick={clickSquare}>
+      {val}
     </div>
   );
 };
